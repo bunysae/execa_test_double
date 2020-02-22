@@ -1,0 +1,21 @@
+{
+	"name": "execa_test_double",
+	"version": "0.0.0",
+	"description": "Test doubles for process execution with execa",
+	"license": "MIT",
+	"files": [
+		"src"
+	],
+	"scripts": {
+		"test": "xo && FORCE_HYPERLINK=1 ava"
+	},
+	"keywords": [
+		"execa",
+		"mock",
+		"test double"
+	],
+	"dependencies": {
+		"globby": "^9.0.0",
+		"sinon": "^9.0.0"
+	}
+}
