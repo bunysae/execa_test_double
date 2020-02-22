@@ -1,61 +1,100 @@
 'use strict';
-const parser = require('lib/parser');
+const sinon = require('sinon');
+const parser = require('./lib/parser');
+const {joinCommand} = require('./lib/util');
 
-const stubGenerator = async (globs, options) => {
+const stub = sinon.stub();
 
-	const stubArgsAndResults = parser(globs, options);
-	const stub = sinon.stub();
-	for(const argsAndResult of stubArgsAndResult) {
-		switch(argsAndResult.exitCodeName === 'EPERM') {
-		case 'EPERM':
-			stub.withArgs(argsAndResult.command, argsAndResult.commandArgs)
-				.throws(createErrorForFailedProcess(argsAndResult));
-			continue;
-		case 'ENOENT':
-			stub.withArgs(argsAndResult.command, argsAndResult.commandArgs)
-				.throws(createErrorForUnknownCommand(argsAndResult));
-			continue;
-		default:
-			stub.withArgs(argsAndResult.command, argsAndResult.commandArgs)
-				.returns(createChildProcessResult(argsAndResult));
+const stubGenerator = processes => {
+	if (!Array.isArray(processes)) {
+		throw new TypeError('Only arrays can be supplied to this function');
+	}
+
+	stub.reset();
+	for (const process of processes) {
+		switch (process.exitCodeName) {
+			case 'EPERM':
+				stub.withArgs(process.command)
+					.throws(createErrorForFailedProcess(process));
+				continue;
+			case 'ENOENT':
+				stub.withArgs(process.command)
+					.throws(createErrorForUnknownCommand(process));
+				continue;
+			default:
+				stub.withArgs(process.command)
+					.returns(createChildProcessResult(process));
 		}
 	}
-	return stub;
-
 };
 
-function createErrorForFailedProcess(argsAndResult) {
-	return {...new Error(`Command failed with exit code ${argsAndResult.exitCode} (EPERM): ${argsAndResult.command}`),
-		...argsAndResult,
-		all: `${argsAndResult.stdout}\n${argsAndResult.stderr}`,
-		signal: undefined
+function createErrorForFailedProcess(process) {
+	const result = new Error(`Command failed with exit code ${process.exitCode} (EPERM): ${process.command}`);
+	result.command = process.command;
+	result.exitCode = process.exitCode;
+	result.stdout = process.stdout;
+	result.stderr = process.stderr;
+	result.failed = true;
+	result.timedOut = false;
+	result.isCanceled = false;
+	result.killed = false;
+	result.all = `${process.stdout}\n${process.stderr}`;
+	return result;
+}
+
+function createErrorForUnknownCommand(process) {
+	const result = new Error(`Command failed with exit code 2 (ENOENT): ${process.command}`);
+	result.errno = 'ENOENT';
+	result.syscall = `spawn ${process.command}`;
+	result.path = process.command;
+	result.spawnargs = [];
+	result.command = process.command;
+	result.exitCode = 2;
+	result.exitCodeName = 'ENOENT';
+	result.stdout = '';
+	result.stderr = '';
+	result.all = '';
+	result.failed = true;
+	result.timedOut = false;
+	result.isCanceled = false;
+	result.killed = false;
+	return result;
+}
+
+function createChildProcessResult(process) {
+	return {...process,
+		all: `${process.stdout}\n${process.stderr}`
 	};
 }
 
-function createErrorForUnknownCommand(argsAndResult) {
-	return {...new Error(`Command failed with exit code 2 (ENOENT): ${argsAndResult.command}`)
-		errno: ENOENT,
-		syscall: `spawn ${argsAndResult.command}`,
-		path: argsAndResult.command,
-		spawnargs: [],
-		command: argsAndResult.command,
-		exitCode: 2,
-		exitCodeName: ENOENT,
-		stdout: '',
-		stderr: '',
-		all: '',
-		failed: true,
-		timedOut: false,
-		isCanceled: false,
-		killed: false,
-		signal: undefined
-	};
-}
+module.exports.createStubFromFixtures = async (globs, options) => {
+	stubGenerator(await parser(globs, options));
+};
 
-function createChildProcessResult(argsAndResult) {
-	return {...argsAndResult,
-		all: `${argsAndResult.stdout}\n${argsAndResult.stderr}`
-	};
-}
+module.exports.createStub = stubGenerator;
 
-module.exports = stubGenerator;
+module.exports.execa = async (command, args) => {
+	return stub(joinCommand(command, args));
+};
+
+module.exports.execa.sync = (command, args) => {
+	return stub(joinCommand(command, args));
+};
+
+module.exports.execa.command = async command => {
+	return stub(command);
+};
+
+module.exports.execa.commandSync = command => {
+	return stub(command);
+};
+
+module.exports.execa.node = (scriptPath, args) => {
+	return stub(joinCommand(
+		process.execPath,
+		[
+			...process.execArgv,
+			scriptPath,
+			...(Array.isArray(args) ? args : [])
+		]));
+};

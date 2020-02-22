@@ -1,0 +1,24 @@
+[{
+	"command": "echo hello world",
+	"exitCode": 0,
+	"exitCodeName": "SUCCESS",
+	"stdout": "hello world",
+	"stderr": "",
+	"all": "hello world\n",
+	"failed": false,
+	"timedOut": false,
+	"isCanceled": false,
+	"killed": false
+},
+{
+	"command": "echo hello from thailand",
+	"exitCode": 0,
+	"exitCodeName": "SUCCESS",
+	"stdout": "hello from thailand",
+	"stderr": "",
+	"all": "hello from thailand\n",
+	"failed": false,
+	"timedOut": false,
+	"isCanceled": false,
+	"killed": false
+}]
