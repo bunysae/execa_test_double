@@ -1,5 +1,7 @@
 # Create test doubles of `execa`
 
+![Build Status](https://github.com/bunysae/execa_test_double/workflows/Node.js%20CI/badge.svg)
+
 With this library you can build test doubles for
 [process execution with `execa`](https://github.com/sindresorhus/execa).
 
