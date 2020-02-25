@@ -18,27 +18,27 @@ const execaTestDouble = require('execa_test_double');
 const mockery = require('mockery');
 
 (async () => {
-execaTestDouble.createStub([{
-        command: "echo hello world",
-        exitCode: 0,
-        exitCodeName: "SUCCESS",
-        stdout: "hello world",
-        stderr: "",
-        failed: false,
-        timedOut: false,
-        isCanceled: false,
-        killed: false
-}]);
+	execaTestDouble.createStub([{
+        	command: "echo hello world",
+	        exitCode: 0,
+        	exitCodeName: "SUCCESS",
+	        stdout: "hello world",
+        	stderr: "",
+	        failed: false,
+        	timedOut: false,
+	        isCanceled: false,
+        	killed: false
+	}]);
 
-mockery.registerMock('execa', execaTestDouble.execa);
-mockery.enable({useCleanCache: true})
+	mockery.registerMock('execa', execaTestDouble.execa);
+	mockery.enable({useCleanCache: true})
 
-//expected output `hello world`
-const execa = require('execa');
-console.log(await execa('hello', ['world']));
+	//expected output `hello world`
+	const execa = require('execa');
+	console.log(await execa('hello', ['world']));
 
-mockery.disable();
-mockery.deregisterAll();
+	mockery.disable();
+	mockery.deregisterAll();
 })();
 ```
 
