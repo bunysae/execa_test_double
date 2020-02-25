@@ -48,7 +48,7 @@ const mockery = require('mockery');
 
 #### createStub(processes)
 Creates stubs for processes. For `processes` a array with
-the type `[childProcessResult](https://github.com/sindresorhus/execa#childProcessResult)` is expected.
+the type [`childProcessResult`](https://github.com/sindresorhus/execa#childProcessResult) is expected.
 For an successful execution please supply the following properties:
 ```js
 {
@@ -65,7 +65,7 @@ For an successful execution please supply the following properties:
 }
 ```
 
-For an command, which terminates with `exitCode !=== 0`:
+For an command, which terminates with `exitCode !== 0`:
 ```js
 {
 	command: "terminate",
