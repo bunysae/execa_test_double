@@ -5,6 +5,7 @@
 	"license": "MIT",
 	"repository": "bunysae/execa_test_double",
 	"files": [
+		"index.js",
 		"src"
 	],
 	"scripts": {
