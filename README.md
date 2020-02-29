@@ -23,17 +23,12 @@ const mockery = require('mockery');
 	execaTestDouble.createStub([{
         	command: "echo hello world",
 	        exitCode: 0,
-        	exitCodeName: "SUCCESS",
 	        stdout: "hello world",
-        	stderr: "",
-	        failed: false,
-        	timedOut: false,
-	        isCanceled: false,
-        	killed: false
+	    	stderr: ""
 	}]);
 
 	mockery.registerMock('execa', execaTestDouble.execa);
-	mockery.enable({useCleanCache: true})
+	mockery.enable({useCleanCache: true});
 
 	//expected output `hello world`
 	const execa = require('execa');
@@ -57,13 +52,8 @@ For an successful execution please supply the following properties:
 	// command (file and arguments)
         command: "echo hello world",
         exitCode: 0,
-        exitCodeName: "SUCCESS",
         stdout: "hello world",
-        stderr: "",
-        failed: false,
-        timedOut: false,
-        isCanceled: false,
-        killed: false
+        stderr: ""
 }
 ```
 
@@ -87,8 +77,14 @@ For an unknown file:
 
 ```
 
+The stub behavior is reseted at every invocation of this method.
+The real command is executed, if it isn't stubbed.
+
 #### async createStubFromFixtures(globs, options)
 Reads the stubs from JSON-Files (JSON-Array or JSON-Object).
 [Globby](https://github.com/sindresorhus/globby) is used for path
 filtering. The parameter `globs` and `options` are
 directly passed to globby.
+
+The stub behavior is reseted at every invocation of this method.
+The real command is executed, if it isn't stubbed.

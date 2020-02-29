@@ -17,6 +17,7 @@
 		"test double"
 	],
 	"dependencies": {
+		"execa": "^4.x.x",
 		"globby": "^9.0.0",
 		"sinon": "^9.0.0"
 	},

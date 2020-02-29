@@ -1,22 +1,12 @@
 [{
 	"command": "echo hello world",
 	"exitCode": 0,
-	"exitCodeName": "SUCCESS",
 	"stdout": "hello world",
-	"stderr": "",
-	"failed": false,
-	"timedOut": false,
-	"isCanceled": false,
-	"killed": false
+	"stderr": ""
 },
 {
 	"command": "echo hello from thailand",
 	"exitCode": 0,
-	"exitCodeName": "SUCCESS",
 	"stdout": "hello from thailand",
-	"stderr": "",
-	"failed": false,
-	"timedOut": false,
-	"isCanceled": false,
-	"killed": false
+	"stderr": ""
 }]
