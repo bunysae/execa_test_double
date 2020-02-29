@@ -21,10 +21,10 @@ const mockery = require('mockery');
 
 (async () => {
 	execaTestDouble.createStub([{
-        	command: "echo hello world",
-	        exitCode: 0,
-	        stdout: "hello world",
-	    	stderr: ""
+		command: "echo hello world",
+		exitCode: 0,
+		stdout: "hello world",
+		stderr: ""
 	}]);
 
 	mockery.registerMock('execa', execaTestDouble.execa);
@@ -88,3 +88,10 @@ directly passed to globby.
 
 The stub behavior is reseted at every invocation of this method.
 The real command is executed, if it isn't stubbed.
+
+#### resetStub
+Resets the history and the behavior of the stub.
+
+## Versioning
+The major, minor and patch component of the version number
+will be keeped in sync with `execa`.
