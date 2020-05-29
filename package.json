@@ -1,6 +1,6 @@
 {
 	"name": "execa_test_double",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"description": "Test doubles for process execution with execa",
 	"license": "MIT",
 	"repository": "bunysae/execa_test_double",
