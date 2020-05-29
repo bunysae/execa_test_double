@@ -9,7 +9,7 @@
 		"src"
 	],
 	"scripts": {
-		"test": "xo && FORCE_HYPERLINK=1 ava"
+		"test": "xo && ava"
 	},
 	"keywords": [
 		"execa",
@@ -22,8 +22,8 @@
 		"sinon": "^9.0.0"
 	},
 	"devDependencies": {
-		"ava": "^3.5.0",
-		"xo": "*"
+		"ava": "^3.8.2",
+		"xo": "^0.30.0"
 	},
 	"xo": {
 		"rules": {

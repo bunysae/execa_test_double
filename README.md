@@ -32,12 +32,40 @@ const mockery = require('mockery');
 
 	//expected output `hello world`
 	const execa = require('execa');
-	console.log(await execa('hello', ['world']));
+	console.log(await execa('echo', ['hello', 'world']));
 
 	mockery.disable();
 	mockery.deregisterAll();
 })();
 ```
+
+### Verify expectations
+Stubbed invocations can be verified with the `getStub()` function:
+```js
+const execaTestDouble = require('execa_test_double');
+const mockery = require('mockery');
+
+(async () => {
+	execaTestDouble.createStub([{
+		command: "echo hello world",
+		exitCode: 0,
+		stdout: "hello world",
+		stderr: ""
+	}]);
+
+	mockery.registerMock('execa', execaTestDouble.execa);
+	mockery.enable({useCleanCache: true});
+
+	const execa = require('execa');
+	console.log(await execa('echo', ['hello', 'world']));
+
+	assert.true(execaTestDouble.getStub().withArgs('echo hello world').calledOnce);
+
+	mockery.disable();
+	mockery.deregisterAll();
+})();
+```
+The verification methods of [sinon spies](https://sinonjs.org/releases/v9.0.0/spies/) can be used.
 
 ## API
 
@@ -92,6 +120,9 @@ The real command is executed, if it isn't stubbed.
 #### resetStub
 Resets the history and the behavior of the stub.
 
+#### getStub
+Returns the [sinon stub](https://sinonjs.org/releases/v9.0.0/stubs).
+
 ## Versioning
-The major, minor and patch component of the version number
+The major and minor component of the version number
 will be keeped in sync with `execa`.

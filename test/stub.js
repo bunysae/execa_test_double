@@ -1,6 +1,6 @@
 const test = require('ava');
 const path = require('path');
-const {createStub, createStubFromFixtures, resetStub, execa} = require('../src/stub');
+const {createStub, createStubFromFixtures, resetStub, getStub, execa} = require('../src/stub');
 
 test.serial('should load stubs from file with JSON-Array', async t => {
 	await createStubFromFixtures(path.resolve('test', 'fixtures', 'array_echo*'));
@@ -40,4 +40,30 @@ test.serial('should execute real command when command isn`t stubbed', async t =>
 	const expectedResult = require('./fixtures/object_echo_hw.json');
 	t.deepEqual(await execa('echo', ['hello', 'world']), {...expectedResult,
 		all: undefined, failed: false, timedOut: false, isCanceled: false, killed: false});
+});
+
+test.serial('can verify expectation', async t => {
+	resetStub();
+	createStub([{
+		command: 'verify args',
+		exitCode: 0,
+		stdout: 'terminated',
+		stderr: 'terminated'
+	}]);
+	await execa('verify', ['args']);
+	t.true(getStub().withArgs('verify args').calledOnce);
+	t.false(getStub().withArgs('echo hello world').called);
+});
+
+test.serial('can verify expectation of sync call', async t => {
+	resetStub();
+	createStub([{
+		command: 'verify args',
+		exitCode: 0,
+		stdout: 'terminated',
+		stderr: 'terminated'
+	}]);
+	await execa.sync('verify', ['args']);
+	t.true(getStub().withArgs('verify args').calledOnce);
+	t.false(getStub().withArgs('echo hello world').called);
 });

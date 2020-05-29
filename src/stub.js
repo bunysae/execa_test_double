@@ -85,36 +85,28 @@ module.exports.resetStub = () => {
 	stub.reset();
 };
 
-module.exports.execa = async (command, args) => {
-	if (stub(joinCommand(command, args))) {
-		return stub(joinCommand(command, args));
-	}
+module.exports.getStub = () => {
+	return stub;
+};
 
-	return execa(command, args);
+module.exports.execa = async (command, args) => {
+	const result = stub(joinCommand(command, args));
+	return result ? result : execa(command, args);
 };
 
 module.exports.execa.sync = (command, args) => {
-	if (stub(joinCommand(command, args))) {
-		return stub(joinCommand(command, args));
-	}
-
-	return execa(command, args);
+	const result = stub(joinCommand(command, args));
+	return result ? result : execa.sync(command, args);
 };
 
 module.exports.execa.command = async command => {
-	if (stub(command)) {
-		return stub(command);
-	}
-
-	return execa(command);
+	const result = stub(command);
+	return result ? result : execa.command(command);
 };
 
 module.exports.execa.commandSync = command => {
-	if (stub(command)) {
-		return stub(command);
-	}
-
-	return execa(command);
+	const result = stub(command);
+	return result ? result : execa.commandSync(command);
 };
 
 module.exports.execa.node = (scriptPath, args) => {
